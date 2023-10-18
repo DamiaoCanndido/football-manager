@@ -7,7 +7,7 @@ export function Leagues() {
       <Navbar />
       <div className="flex flex-1">
         <Menu />
-        <main>Leagues</main>
+        <main className="p-4 mt-24 ml-60">Leagues</main>
       </div>
     </div>
   );
