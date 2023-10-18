@@ -10,8 +10,8 @@ interface ITeam {
 
 export function TeamCard({ items }: ITeam) {
   return (
-    <div className="flex flex-col border-2 border-gray-500 rounded-lg">
-      <div className="bg-gray-300 h-64 w-64 p-2 flex justify-center items-center">
+    <div className="flex h-80 w-64 mx-2 mb-2 flex-col rounded-lg">
+      <div className="bg-gray-300 p-2 flex justify-center items-center">
         <div className="bg-white rounded-full h-56 w-56 flex justify-center items-center">
           <img className="h-32" src={items.logo} alt="" />
         </div>

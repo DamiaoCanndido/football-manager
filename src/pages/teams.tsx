@@ -30,9 +30,9 @@ export function Teams() {
   return (
     <div className="flex min-h-screen bg-white">
       <Navbar />
-      <div className="">
+      <div className="flex">
         <Menu />
-        <main className="flex p-4 mt-24 ml-60">
+        <main className="grid grid-cols-1 md:grid-cols-3 pl-4 pt-4 mt-24 ml-60">
           {responses.map((e) => {
             return <TeamCard key={e.id} items={e} />;
           })}
