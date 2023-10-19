@@ -63,6 +63,13 @@ export function Teams() {
       isCountry: false,
       logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
     },
+    {
+      id: '8',
+      name: 'Tottenham',
+      code: 'TOT',
+      isCountry: false,
+      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
+    },
   ];
 
   const [teams, setTeams] = useState<ITeam[]>([]);
@@ -78,11 +85,13 @@ export function Teams() {
       <Navbar />
       <>
         <Menu />
-        <main className="flex flex-wrap px-4 pt-4 mt-24 ml-60">
-          <div className="w-full h-20 bg-gray-400 mb-4 rounded-xl"></div>
-          {responses.map((e) => {
-            return <TeamCard key={e.id} items={e} />;
-          })}
+        <main className="px-4 w-full pt-4 mt-24 ml-60">
+          <div className="h-20 bg-gray-400 mb-4 rounded-xl"></div>
+          <div className="flex items-center flex-wrap">
+            {responses.map((e) => {
+              return <TeamCard key={e.id} items={e} />;
+            })}
+          </div>
         </main>
       </>
     </div>
