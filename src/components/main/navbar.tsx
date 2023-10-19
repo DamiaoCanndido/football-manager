@@ -1,4 +1,4 @@
-import { Filter, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
@@ -13,9 +13,6 @@ export function Navbar() {
           </Button>
           <Input className="px-1 mx-1" />
         </form>
-        <Button className="bg-transparent hover:bg-transparent">
-          <Filter />
-        </Button>
       </div>
     </nav>
   );
