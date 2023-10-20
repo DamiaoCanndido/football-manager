@@ -4,7 +4,7 @@ import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { TeamCard } from '@/components/teams/team-card';
 
-interface ITeam {
+export interface ITeam {
   id: string;
   name: string;
   code: string;
@@ -13,72 +13,20 @@ interface ITeam {
 }
 
 export function Teams() {
-  const responses = [
-    {
-      id: '1',
-      name: 'Manchester City',
-      code: 'MCY',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/0/02/Manchester_City_Football_Club.png',
-    },
-    {
-      id: '2',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-    {
-      id: '3',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-    {
-      id: '4',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-    {
-      id: '5',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-    {
-      id: '6',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-    {
-      id: '7',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-    {
-      id: '8',
-      name: 'Tottenham',
-      code: 'TOT',
-      isCountry: false,
-      logo: 'https://upload.wikimedia.org/wikipedia/pt/6/6d/Tottenham_Hotspur.png',
-    },
-  ];
-
   const [teams, setTeams] = useState<ITeam[]>([]);
+  const [select, setSelect] = useState('');
 
   useEffect(() => {
-    api.get(`/team`).then((response) => {
-      setTeams(response.data);
-    });
-  }, []);
+    if (select === '') {
+      api.get(`/team`).then((response) => {
+        setTeams(response.data);
+      });
+    } else {
+      api.get(`/team?type=${select}`).then((response) => {
+        setTeams(response.data);
+      });
+    }
+  }, [select]);
 
   return (
     <div className="flex bg-white">
@@ -86,9 +34,22 @@ export function Teams() {
       <>
         <Menu />
         <main className="px-4 w-full pt-4 mt-24 ml-60">
-          <div className="h-20 bg-gray-400 mb-4 rounded-xl"></div>
+          <div className="flex p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
+            <select
+              className="w-40 h-10 p-2 border rounded-lg outline-none"
+              id="type"
+              onChange={(e) => {
+                setSelect(e.target.value);
+              }}
+            >
+              <option value="">Todos</option>
+              <option value="club">Clube</option>
+              <option value="selection">Seleção</option>
+              <option value="amateur">Amador</option>
+            </select>
+          </div>
           <div className="flex items-center flex-wrap">
-            {responses.map((e) => {
+            {teams.map((e) => {
               return <TeamCard key={e.id} items={e} />;
             })}
           </div>
