@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { api } from '../lib/axios';
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { TeamCard } from '@/components/teams/team-card';
+import { Searching } from '@/components/ui/search';
 
 export interface ITeam {
   id: string;
@@ -15,6 +16,7 @@ export interface ITeam {
 export function Teams() {
   const [teams, setTeams] = useState<ITeam[]>([]);
   const [select, setSelect] = useState('');
+  const [name, setName] = useState('');
 
   useEffect(() => {
     if (select === '') {
@@ -27,6 +29,11 @@ export function Teams() {
       });
     }
   }, [select]);
+
+  function getSearch(event: FormEvent) {
+    event.preventDefault();
+    console.log(name);
+  }
 
   return (
     <div className="flex bg-white">
@@ -47,6 +54,7 @@ export function Teams() {
               <option value="selection">Seleção</option>
               <option value="amateur">Amador</option>
             </select>
+            <Searching getSearch={getSearch} name={name} setName={setName} />
           </div>
           <div className="flex items-center flex-wrap">
             {teams.map((e) => {
