@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
-import { GameCard } from '@/components/teams/game-card';
+import { GameCard } from '@/components/cards/game-card';
 
 export function Games() {
   const responses = [

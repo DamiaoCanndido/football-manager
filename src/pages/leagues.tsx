@@ -1,6 +1,6 @@
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
-import { LeagueCard } from '@/components/teams/league-card';
+import { LeagueCard } from '@/components/cards/league-card';
 
 export function Leagues() {
   const responses = [

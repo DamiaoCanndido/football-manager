@@ -2,7 +2,7 @@ import { useState, useEffect, FormEvent } from 'react';
 import { api } from '../lib/axios';
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
-import { TeamCard } from '@/components/teams/team-card';
+import { TeamCard } from '@/components/cards/team-card';
 import { Searching } from '@/components/ui/searching';
 import { Button, Form, Input, Modal, Select } from 'antd';
 
@@ -28,6 +28,13 @@ export function Teams() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const resetFields = () => {
+    setName('');
+    setCode('');
+    setType('');
+    setLogo('');
+  };
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -40,30 +47,7 @@ export function Teams() {
     setIsModalOpen(false);
   };
 
-  const submitError = (field: string) => {
-    Modal.error({
-      title: 'Erro',
-      content: `o campo ${field} está inválido.`,
-    });
-  };
-
   const handleSubmit = async () => {
-    if (name.trim().length < 3) {
-      submitError('nome');
-      return;
-    }
-    if (code.trim().length < 3) {
-      submitError('código');
-      return;
-    }
-    if (type.trim().length < 3) {
-      submitError('nome');
-      return;
-    }
-    if (logo.trim().length < 3) {
-      submitError('nome');
-      return;
-    }
     try {
       await api.post(`/team`, {
         name,
@@ -82,7 +66,7 @@ export function Teams() {
     } catch (error) {
       Modal.error({
         title: 'Erro',
-        content: `Algum campo ainda está inválido`,
+        content: `Requisição inválida.`,
       });
     } finally {
       handleOk();
@@ -139,9 +123,11 @@ export function Teams() {
               </Button>
               <Modal
                 title="Criar novo time:"
+                centered
                 open={isModalOpen}
                 onOk={handleSubmit}
                 onCancel={handleCancel}
+                footer
               >
                 <Form
                   name="trigger"
@@ -155,7 +141,16 @@ export function Teams() {
                     name="name"
                     validateFirst
                     required
-                    rules={[{ min: 3 }]}
+                    rules={[
+                      {
+                        min: 3,
+                        message: 'Digite um nome com 3 caracteres no mínimo.',
+                      },
+                      {
+                        required: true,
+                        message: 'Digite um nome válido',
+                      },
+                    ]}
                   >
                     <Input
                       placeholder="Nome"
@@ -170,7 +165,16 @@ export function Teams() {
                     name="code"
                     validateFirst
                     required
-                    rules={[{ min: 3 }, { max: 3 }]}
+                    rules={[
+                      {
+                        len: 3,
+                        message: 'Digite um código com 3 caracteres.',
+                      },
+                      {
+                        required: true,
+                        message: 'Digite um codigo válido',
+                      },
+                    ]}
                   >
                     <Input
                       placeholder="Código"
@@ -182,7 +186,12 @@ export function Teams() {
                   <Form.Item
                     name="type"
                     label="Tipo"
-                    rules={[{ required: true }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Escolha o tipo de time',
+                      },
+                    ]}
                   >
                     <Select
                       placeholder="selecione um tipo"
@@ -203,7 +212,16 @@ export function Teams() {
                     name="logo"
                     validateFirst
                     required
-                    rules={[{ min: 3 }, { type: 'url' }]}
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Cole um url válida',
+                      },
+                      {
+                        type: 'url',
+                        message: 'Url inválida',
+                      },
+                    ]}
                   >
                     <Input
                       placeholder="copie a url da imagem"
@@ -211,6 +229,28 @@ export function Teams() {
                       onChange={(e) => setLogo(e.target.value)}
                     />
                   </Form.Item>
+                  <div className="flex gap-2">
+                    <Form.Item name="button">
+                      <Button
+                        onClick={handleSubmit}
+                        className="bg-green-400"
+                        type="primary"
+                        htmlType="submit"
+                      >
+                        Criar
+                      </Button>
+                    </Form.Item>
+                    <Form.Item name="button">
+                      <Button
+                        onClick={resetFields}
+                        className="bg-orange-400"
+                        type="primary"
+                        htmlType="reset"
+                      >
+                        Apagar
+                      </Button>
+                    </Form.Item>
+                  </div>
                 </Form>
               </Modal>
             </>
