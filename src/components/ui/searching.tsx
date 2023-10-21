@@ -1,5 +1,5 @@
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
+import { Button } from './button';
+import { Input } from './input';
 import { FormEvent } from 'react';
 import { Search } from 'lucide-react';
 

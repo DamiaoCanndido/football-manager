@@ -3,7 +3,7 @@ import { api } from '../lib/axios';
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { TeamCard } from '@/components/teams/team-card';
-import { Searching } from '@/components/ui/search';
+import { Searching } from '@/components/ui/searching';
 
 export interface ITeam {
   id: string;
@@ -32,7 +32,9 @@ export function Teams() {
 
   function getSearch(event: FormEvent) {
     event.preventDefault();
-    console.log(name);
+    api.get(`/team?name=${name}`).then((response) => {
+      setTeams(response.data);
+    });
   }
 
   return (
@@ -41,7 +43,7 @@ export function Teams() {
       <>
         <Menu />
         <main className="px-4 w-full pt-4 mt-24 ml-60">
-          <div className="flex p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
+          <div className="flex justify-between p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
             <select
               className="w-40 h-10 p-2 border rounded-lg outline-none"
               id="type"
