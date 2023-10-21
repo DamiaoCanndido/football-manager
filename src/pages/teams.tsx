@@ -4,6 +4,9 @@ import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { TeamCard } from '@/components/teams/team-card';
 import { Searching } from '@/components/ui/searching';
+import { Button, Form, Input, Modal, Select } from 'antd';
+
+const { Option } = Select;
 
 export interface ITeam {
   id: string;
@@ -16,7 +19,75 @@ export interface ITeam {
 export function Teams() {
   const [teams, setTeams] = useState<ITeam[]>([]);
   const [select, setSelect] = useState('');
+  const [searchName, setSearchName] = useState('');
+
   const [name, setName] = useState('');
+  const [code, setCode] = useState('');
+  const [type, setType] = useState('');
+  const [logo, setLogo] = useState('');
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const submitError = (field: string) => {
+    Modal.error({
+      title: 'Erro',
+      content: `o campo ${field} está inválido.`,
+    });
+  };
+
+  const handleSubmit = async () => {
+    if (name.trim().length < 3) {
+      submitError('nome');
+      return;
+    }
+    if (code.trim().length < 3) {
+      submitError('código');
+      return;
+    }
+    if (type.trim().length < 3) {
+      submitError('nome');
+      return;
+    }
+    if (logo.trim().length < 3) {
+      submitError('nome');
+      return;
+    }
+    try {
+      await api.post(`/team`, {
+        name,
+        code,
+        type,
+        logo,
+      });
+      api.get(`/team`).then((response) => {
+        setTeams(response.data);
+      });
+      Modal.success({
+        title: 'Criado',
+        content: `Time criado.`,
+      });
+      handleOk();
+    } catch (error) {
+      Modal.error({
+        title: 'Erro',
+        content: `Algum campo ainda está inválido`,
+      });
+    } finally {
+      handleOk();
+    }
+  };
 
   useEffect(() => {
     if (select === '') {
@@ -32,13 +103,13 @@ export function Teams() {
 
   function getSearch(event: FormEvent) {
     event.preventDefault();
-    api.get(`/team?name=${name}`).then((response) => {
+    api.get(`/team?name=${searchName}`).then((response) => {
       setTeams(response.data);
     });
   }
 
   return (
-    <div className="flex bg-white">
+    <div className="flex">
       <Navbar />
       <>
         <Menu />
@@ -56,7 +127,90 @@ export function Teams() {
               <option value="selection">Seleção</option>
               <option value="amateur">Amador</option>
             </select>
-            <Searching getSearch={getSearch} name={name} setName={setName} />
+            <Searching
+              getSearch={getSearch}
+              name={searchName}
+              setName={setSearchName}
+            />
+            <>
+              <Button onClick={showModal}>Criar</Button>
+              <Modal
+                title="Criar novo time:"
+                open={isModalOpen}
+                onOk={handleSubmit}
+                onCancel={handleCancel}
+              >
+                <Form
+                  name="trigger"
+                  style={{ maxWidth: 600 }}
+                  layout="vertical"
+                  autoComplete="off"
+                >
+                  <Form.Item
+                    hasFeedback
+                    label="Nome"
+                    name="name"
+                    validateFirst
+                    required
+                    rules={[{ min: 3 }]}
+                  >
+                    <Input
+                      placeholder="Nome"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    hasFeedback
+                    label="Código"
+                    name="code"
+                    validateFirst
+                    required
+                    rules={[{ min: 3 }, { max: 3 }]}
+                  >
+                    <Input
+                      placeholder="Código"
+                      value={code}
+                      onChange={(e) => setCode(e.target.value)}
+                    />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="type"
+                    label="Tipo"
+                    rules={[{ required: true }]}
+                  >
+                    <Select
+                      placeholder="selecione um tipo"
+                      onChange={(e) => {
+                        setType(e);
+                      }}
+                      allowClear
+                    >
+                      <Option value="club">Clube</Option>
+                      <Option value="selection">Seleção</Option>
+                      <Option value="amateur">Amador</Option>
+                    </Select>
+                  </Form.Item>
+
+                  <Form.Item
+                    hasFeedback
+                    label="Logo"
+                    name="logo"
+                    validateFirst
+                    required
+                    rules={[{ min: 3 }, { type: 'url' }]}
+                  >
+                    <Input
+                      placeholder="copie a url da imagem"
+                      value={logo}
+                      onChange={(e) => setLogo(e.target.value)}
+                    />
+                  </Form.Item>
+                </Form>
+              </Modal>
+            </>
           </div>
           <div className="flex items-center flex-wrap">
             {teams.map((e) => {
