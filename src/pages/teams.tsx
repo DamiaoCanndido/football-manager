@@ -115,25 +115,28 @@ export function Teams() {
         <Menu />
         <main className="px-4 w-full pt-4 mt-24 ml-60">
           <div className="flex justify-between p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
-            <select
-              className="w-40 h-10 p-2 border rounded-lg outline-none"
+            <Select
+              className="w-40"
               id="type"
               onChange={(e) => {
-                setSelect(e.target.value);
+                setSelect(e);
               }}
+              allowClear
             >
-              <option value="">Todos</option>
-              <option value="club">Clube</option>
-              <option value="selection">Seleção</option>
-              <option value="amateur">Amador</option>
-            </select>
+              <Option value="">Todos</Option>
+              <Option value="club">Clube</Option>
+              <Option value="selection">Seleção</Option>
+              <Option value="amateur">Amador</Option>
+            </Select>
             <Searching
               getSearch={getSearch}
-              name={searchName}
-              setName={setSearchName}
+              searchName={searchName}
+              setSearchName={setSearchName}
             />
             <>
-              <Button onClick={showModal}>Criar</Button>
+              <Button className="bg-green-400 text-white" onClick={showModal}>
+                Criar
+              </Button>
               <Modal
                 title="Criar novo time:"
                 open={isModalOpen}
