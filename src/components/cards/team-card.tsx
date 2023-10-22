@@ -3,7 +3,7 @@ export interface ITeam {
     id: string;
     name: string;
     code: string;
-    isCountry: boolean;
+    type: string;
     logo: string;
   };
 }
