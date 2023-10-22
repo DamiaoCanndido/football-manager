@@ -19,8 +19,9 @@ export function LeagueCard({ items }: ILeague) {
           <img className="h-32 p-4" src={items.logo} alt="" />
         </div>
       </div>
-      <div className="bg-gray-200 h-16 w-64 flex justify-center items-center">
+      <div className="bg-gray-200 h-16 w-64 flex flex-col justify-center items-center">
         <p className="text-xl">{items.name}</p>
+        <p className="text-lg">{items.season}</p>
       </div>
     </div>
   );

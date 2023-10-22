@@ -79,7 +79,6 @@ export function Teams() {
   }, [select]);
 
   function getSearch(event: FormEvent) {
-    console.log(select);
     event.preventDefault();
     api.get(`/team?name=${searchName}`).then((response) => {
       setTeams(response.data);
