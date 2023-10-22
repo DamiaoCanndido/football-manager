@@ -5,16 +5,9 @@ import { Menu } from '@/components/main/menu';
 import { TeamCard } from '@/components/cards/team-card';
 import { Searching } from '@/components/ui/searching';
 import { Button, Form, Input, Modal, Select } from 'antd';
+import { ITeam } from '@/interfaces/team';
 
 const { Option } = Select;
-
-export interface ITeam {
-  id: string;
-  name: string;
-  code: string;
-  type: string;
-  logo: string;
-}
 
 export function Teams() {
   const [teams, setTeams] = useState<ITeam[]>([]);
@@ -86,6 +79,7 @@ export function Teams() {
   }, [select]);
 
   function getSearch(event: FormEvent) {
+    console.log(select);
     event.preventDefault();
     api.get(`/team?name=${searchName}`).then((response) => {
       setTeams(response.data);
