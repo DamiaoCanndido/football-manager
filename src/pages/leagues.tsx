@@ -114,6 +114,9 @@ export function Leagues() {
               }}
               placeholder="Selecione o país"
             >
+              <Option key={'todos'} value={''}>
+                Todos
+              </Option>
               {country.map((e) => {
                 return (
                   /*
