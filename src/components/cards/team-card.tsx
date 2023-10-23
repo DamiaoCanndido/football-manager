@@ -1,4 +1,4 @@
-export interface ITeam {
+interface ITeam {
   items: {
     id: string;
     name: string;
