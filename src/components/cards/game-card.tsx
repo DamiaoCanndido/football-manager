@@ -1,3 +1,4 @@
+import { DateFormatter } from '@/helpers/date-formatter';
 import { ITeam } from '@/interfaces/team';
 
 interface IGame {
@@ -53,7 +54,7 @@ export function GameCard({ items }: IGame) {
         <div className="flex flex-1 mx-1">{items.away.name}</div>
       </div>
       <div className="flex items-center justify-center flex-1">
-        {items.startDate}
+        {DateFormatter(items.startDate)}
       </div>
     </div>
   );
