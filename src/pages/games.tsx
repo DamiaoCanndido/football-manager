@@ -4,6 +4,7 @@ import { GameCard } from '@/components/cards/game-card';
 import { useEffect, useState } from 'react';
 import { IGame } from '@/interfaces/game';
 import { api } from '@/lib/axios';
+import { Dayjs } from 'dayjs';
 import {
   Button,
   DatePicker,
@@ -22,13 +23,25 @@ export function Games() {
   const [games, setGames] = useState<IGame[]>([]);
   const [teams, setTeams] = useState<ITeam[]>([]);
   const [leagues, setLeagues] = useState<ILeague[]>([]);
-  const [createLeague, setCreateLeague] = useState('');
   const [selectLeagues, setSelectLeagues] = useState('');
   const [rounds, setRounds] = useState<string[] | undefined>([]);
   const [selectRounds, setSelectRounds] = useState('');
 
   const [homeId, setHomeId] = useState('');
   const [awayId, setAwayId] = useState('');
+  const [createLeague, setCreateLeague] = useState<string | null>();
+  const [createRound, setCreateRound] = useState(1);
+  const [date, setDate] = useState<Dayjs | undefined>();
+  const [hour, setHour] = useState<Dayjs | undefined>();
+
+  const resetFields = () => {
+    setHomeId('');
+    setAwayId('');
+    setCreateLeague(null);
+    setCreateRound(1);
+    setDate(undefined);
+    setHour(undefined);
+  };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -45,8 +58,6 @@ export function Games() {
   };
 
   useEffect(() => {
-    console.log(homeId);
-    console.log(awayId);
     api.get(`/team`).then((response) => {
       setTeams(response.data);
     });
@@ -75,7 +86,38 @@ export function Games() {
     api.get(`/league`).then((response) => {
       setLeagues(response.data);
     });
-  }, [selectLeagues, selectRounds, homeId]);
+  }, [leagues, selectLeagues, selectRounds]);
+
+  const handleSubmit = async () => {
+    try {
+      const day = date?.format().split('T')[0];
+      const hours = hour?.format().split('T')[1]?.substring(0, 8);
+      const startDate = day + 'T' + hours + 'Z';
+      await api.post(`/fixtures`, {
+        homeId: homeId.split('*')[0],
+        awayId: awayId.split('*')[0],
+        leagueId: createLeague ? createLeague!.split('*')[0] : null,
+        round: createRound,
+        startDate,
+      });
+      api.get(`/team`).then((response) => {
+        setTeams(response.data);
+      });
+      Modal.success({
+        title: 'Criado',
+        content: `Jogo criado.`,
+      });
+      handleOk();
+    } catch (error) {
+      console.log(error);
+      Modal.error({
+        title: 'Erro',
+        content: `Requisição inválida.`,
+      });
+    } finally {
+      handleOk();
+    }
+  };
 
   return (
     <div className="flex bg-white">
@@ -234,7 +276,9 @@ export function Games() {
                       min={1}
                       placeholder="Rodada"
                       value={1}
-                      onChange={(e) => {}}
+                      onChange={(e) => {
+                        setCreateRound(e!);
+                      }}
                     />
                   </Form.Item>
                   <div className="flex">
@@ -251,7 +295,11 @@ export function Games() {
                         },
                       ]}
                     >
-                      <DatePicker onChange={(e) => {}} />
+                      <DatePicker
+                        onChange={(e) => {
+                          setDate(e!);
+                        }}
+                      />
                     </Form.Item>
                     <Form.Item
                       hasFeedback
@@ -266,7 +314,33 @@ export function Games() {
                         },
                       ]}
                     >
-                      <TimePicker onChange={(e) => {}} />
+                      <TimePicker
+                        onChange={(e) => {
+                          setHour(e!);
+                        }}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="flex gap-2">
+                    <Form.Item name="button">
+                      <Button
+                        onClick={handleSubmit}
+                        className="bg-green-400"
+                        type="primary"
+                        htmlType="submit"
+                      >
+                        Criar
+                      </Button>
+                    </Form.Item>
+                    <Form.Item name="button">
+                      <Button
+                        onClick={resetFields}
+                        className="bg-orange-400"
+                        type="primary"
+                        htmlType="reset"
+                      >
+                        Apagar
+                      </Button>
                     </Form.Item>
                   </div>
                 </Form>
