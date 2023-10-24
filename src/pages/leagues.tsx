@@ -260,6 +260,7 @@ export function Leagues() {
                   >
                     <InputNumber
                       placeholder="Número de rodadas"
+                      min={1}
                       value={numberOfRounds}
                       onChange={(e) => setNumberOfRounds(e!)}
                     />
