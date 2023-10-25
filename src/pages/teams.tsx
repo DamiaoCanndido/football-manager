@@ -223,7 +223,7 @@ export function Teams() {
                     />
                   </Form.Item>
                   <div className="flex gap-2">
-                    <Form.Item name="button">
+                    <Form.Item name="submit">
                       <Button
                         onClick={handleSubmit}
                         className="bg-green-400"
@@ -233,7 +233,7 @@ export function Teams() {
                         Criar
                       </Button>
                     </Form.Item>
-                    <Form.Item name="button">
+                    <Form.Item name="reset">
                       <Button
                         onClick={resetFields}
                         className="bg-orange-400"

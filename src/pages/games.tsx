@@ -61,6 +61,12 @@ export function Games() {
     api.get(`/team`).then((response) => {
       setTeams(response.data);
     });
+    api.get(`/league`).then((response) => {
+      setLeagues(response.data);
+    });
+  }, [games]);
+
+  useEffect(() => {
     if (selectLeagues === '') {
       api.get(`/fixtures`).then((response) => {
         setGames(response.data);
@@ -83,10 +89,7 @@ export function Games() {
       });
       setRounds(element?.rounds);
     }
-    api.get(`/league`).then((response) => {
-      setLeagues(response.data);
-    });
-  }, [leagues, selectLeagues, selectRounds]);
+  }, [selectLeagues, selectRounds]);
 
   const handleSubmit = async () => {
     try {
@@ -100,8 +103,8 @@ export function Games() {
         round: createRound,
         startDate,
       });
-      api.get(`/team`).then((response) => {
-        setTeams(response.data);
+      api.get(`/fixtures`).then((response) => {
+        setGames(response.data);
       });
       Modal.success({
         title: 'Criado',
