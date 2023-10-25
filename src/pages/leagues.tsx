@@ -1,12 +1,20 @@
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { LeagueCard } from '@/components/cards/league-card';
-import { FormEvent, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '@/lib/axios';
 import { Searching } from '@/components/ui/searching';
 import { ILeague } from '@/interfaces/league';
 import { ITeam } from '@/interfaces/team';
-import { Button, Form, Input, InputNumber, Modal, Select } from 'antd';
+import {
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  InputRef,
+  Modal,
+  Select,
+} from 'antd';
 
 const { Option } = Select;
 
@@ -14,6 +22,8 @@ export function Leagues() {
   const [leagues, setLeagues] = useState<ILeague[]>([]);
   const [country, setCountry] = useState<ITeam[]>([]);
   const [countrySearchSelect, setCountrySearchSelect] = useState('');
+
+  const searchName = useRef<InputRef | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -44,8 +54,6 @@ export function Leagues() {
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-
-  const [searchName, setSearchName] = useState('');
 
   useEffect(() => {
     api.get(`/team?type=selection`).then((response) => {
@@ -91,9 +99,9 @@ export function Leagues() {
     }
   };
 
-  function getSearch(event: FormEvent) {
-    event.preventDefault();
-    api.get(`/league?name=${searchName}`).then((response) => {
+  function getSearch() {
+    const name = searchName.current?.input?.value;
+    api.get(`/league?name=${name}`).then((response) => {
       setLeagues(response.data);
     });
   }
@@ -128,11 +136,7 @@ export function Leagues() {
                 );
               })}
             </Select>
-            <Searching
-              getSearch={getSearch}
-              searchName={searchName}
-              setSearchName={setSearchName}
-            />
+            <Searching getSearch={getSearch} searchName={searchName} />
             <>
               <Button className="bg-green-400 text-white" onClick={showModal}>
                 Criar

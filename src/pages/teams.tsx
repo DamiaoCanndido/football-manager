@@ -1,10 +1,10 @@
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { api } from '../lib/axios';
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { TeamCard } from '@/components/cards/team-card';
 import { Searching } from '@/components/ui/searching';
-import { Button, Form, Input, Modal, Select } from 'antd';
+import { Button, Form, Input, Modal, Select, InputRef } from 'antd';
 import { ITeam } from '@/interfaces/team';
 
 const { Option } = Select;
@@ -12,20 +12,20 @@ const { Option } = Select;
 export function Teams() {
   const [teams, setTeams] = useState<ITeam[]>([]);
   const [select, setSelect] = useState('');
-  const [searchName, setSearchName] = useState('');
+  const searchName = useRef<InputRef | null>(null);
 
-  const [name, setName] = useState('');
-  const [code, setCode] = useState('');
+  const name = useRef<InputRef | null>(null);
+  const code = useRef<InputRef | null>(null);
   const [type, setType] = useState('');
-  const [logo, setLogo] = useState('');
+  const logo = useRef<InputRef | null>(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const resetFields = () => {
-    setName('');
-    setCode('');
+    name.current?.input?.defaultValue;
+    code.current?.input?.defaultValue;
     setType('');
-    setLogo('');
+    logo.current?.input?.defaultValue;
   };
 
   const showModal = () => {
@@ -43,10 +43,10 @@ export function Teams() {
   const handleSubmit = async () => {
     try {
       await api.post(`/team`, {
-        name,
-        code,
+        name: name.current?.input?.value,
+        code: code.current?.input?.value,
         type,
-        logo,
+        logo: logo.current?.input?.value,
       });
       api.get(`/team`).then((response) => {
         setTeams(response.data);
@@ -78,9 +78,9 @@ export function Teams() {
     }
   }, [select]);
 
-  function getSearch(event: FormEvent) {
-    event.preventDefault();
-    api.get(`/team?name=${searchName}`).then((response) => {
+  function getSearch() {
+    const name = searchName.current?.input?.value;
+    api.get(`/team?name=${name}`).then((response) => {
       setTeams(response.data);
     });
   }
@@ -105,11 +105,7 @@ export function Teams() {
               <Option value="selection">Seleção</Option>
               <Option value="amateur">Amador</Option>
             </Select>
-            <Searching
-              getSearch={getSearch}
-              searchName={searchName}
-              setSearchName={setSearchName}
-            />
+            <Searching getSearch={getSearch} searchName={searchName} />
             <>
               <Button className="bg-green-400 text-white" onClick={showModal}>
                 Criar
@@ -145,11 +141,7 @@ export function Teams() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder="Nome"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
+                    <Input placeholder="Nome" ref={name} />
                   </Form.Item>
 
                   <Form.Item
@@ -169,11 +161,7 @@ export function Teams() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder="Código"
-                      value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                    />
+                    <Input placeholder="Código" ref={code} />
                   </Form.Item>
 
                   <Form.Item
@@ -216,11 +204,7 @@ export function Teams() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder="copie a url da imagem"
-                      value={logo}
-                      onChange={(e) => setLogo(e.target.value)}
-                    />
+                    <Input placeholder="copie a url da imagem" ref={logo} />
                   </Form.Item>
                   <div className="flex gap-2">
                     <Form.Item name="submit">

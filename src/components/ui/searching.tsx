@@ -1,11 +1,10 @@
-import { FormEvent } from 'react';
+import { FormEvent, MutableRefObject } from 'react';
 import { Search } from 'lucide-react';
-import { Form, Button, Input } from 'antd';
+import { Form, Button, Input, InputRef } from 'antd';
 
 interface propType {
   getSearch: (event: FormEvent) => void;
-  searchName: string;
-  setSearchName: React.Dispatch<React.SetStateAction<string>>;
+  searchName: MutableRefObject<InputRef | null>;
 }
 
 export function Searching(props: propType) {
@@ -20,11 +19,7 @@ export function Searching(props: propType) {
       autoComplete="off"
     >
       <Form.Item name="name">
-        <Input
-          placeholder="buscando..."
-          value={props.searchName}
-          onChange={(e) => props.setSearchName(e.target.value)}
-        />
+        <Input placeholder="buscando..." ref={props.searchName} />
       </Form.Item>
       <Form.Item name="button">
         <Button
