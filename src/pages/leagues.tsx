@@ -27,19 +27,19 @@ export function Leagues() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [name, setName] = useState('');
-  const [season, setSeason] = useState('');
+  const name = useRef<InputRef | null>(null);
+  const season = useRef<InputRef | null>(null);
   const [type, setType] = useState('');
-  const [logo, setLogo] = useState('');
-  const [numberOfRounds, setNumberOfRounds] = useState(1);
-  const [countryId, setCountryId] = useState<string | null>(null);
+  const logo = useRef<InputRef | null>(null);
+  const numberOfRounds = useRef<HTMLInputElement | null>(null);
+  const [countryId, setCountryId] = useState<string | undefined>(undefined);
 
   const resetFields = () => {
-    setName('');
-    setSeason('');
+    name.current?.input?.defaultValue;
+    season.current?.input?.defaultValue;
     setType('');
-    setLogo('');
-    setNumberOfRounds(1);
+    logo.current?.input?.defaultValue;
+    numberOfRounds.current?.defaultValue;
     setCountryId('');
   };
 
@@ -74,11 +74,11 @@ export function Leagues() {
   const handleSubmit = async () => {
     try {
       await api.post(`/league`, {
-        name,
-        season,
+        name: name.current?.input?.value,
+        season: season.current?.input?.value,
         type,
-        logo,
-        numberOfRounds,
+        logo: logo.current?.input?.value,
+        numberOfRounds: parseInt(numberOfRounds.current?.value!),
         countryId,
       });
       api.get(`/league`).then((response) => {
@@ -90,6 +90,7 @@ export function Leagues() {
       });
       handleOk();
     } catch (error) {
+      console.log(error);
       Modal.error({
         title: 'Erro',
         content: `Requisição inválida.`,
@@ -172,11 +173,7 @@ export function Leagues() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder="Nome"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
+                    <Input placeholder="Nome" ref={name} />
                   </Form.Item>
 
                   <Form.Item
@@ -197,11 +194,7 @@ export function Leagues() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder="Temporada"
-                      value={season}
-                      onChange={(e) => setSeason(e.target.value)}
-                    />
+                    <Input placeholder="Temporada" ref={season} />
                   </Form.Item>
 
                   <Form.Item
@@ -243,11 +236,7 @@ export function Leagues() {
                       },
                     ]}
                   >
-                    <Input
-                      placeholder="copie a url da imagem"
-                      value={logo}
-                      onChange={(e) => setLogo(e.target.value)}
-                    />
+                    <Input placeholder="copie a url da imagem" ref={logo} />
                   </Form.Item>
                   <Form.Item
                     hasFeedback
@@ -265,8 +254,7 @@ export function Leagues() {
                     <InputNumber
                       placeholder="Número de rodadas"
                       min={1}
-                      value={numberOfRounds}
-                      onChange={(e) => setNumberOfRounds(e!)}
+                      ref={numberOfRounds}
                     />
                   </Form.Item>
                   <Form.Item hasFeedback label="País" name="country">
