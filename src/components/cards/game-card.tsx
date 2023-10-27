@@ -26,7 +26,9 @@ export function GameCard({ items }: IGame) {
   return (
     <div className="flex flex-col h-40 w-96 mx-2 mb-2 border rounded-xl border-black">
       <div className="flex flex-1 items-center justify-center">
-        {items.league ? `${items.league.name} • ${items.round}` : 'Amistoso'}
+        {items.league
+          ? `${items.league.name} • Rodada ${items.round}`
+          : 'Amistoso'}
       </div>
       <div className="flex items-center justify-center flex-2">
         <div className="mx-1">

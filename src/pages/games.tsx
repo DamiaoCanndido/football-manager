@@ -67,6 +67,7 @@ export function Games() {
   }, [games]);
 
   useEffect(() => {
+    console.log(selectRounds);
     if (selectLeagues === '') {
       api.get(`/fixtures`).then((response) => {
         setGames(response.data);
@@ -76,7 +77,7 @@ export function Games() {
     } else {
       let round = '';
       if (selectRounds) {
-        round = selectRounds.split(' ')[1];
+        round = selectRounds;
       }
       api
         .get(`/fixtures/${selectLeagues}/league?round=${round}`)
@@ -112,7 +113,6 @@ export function Games() {
       });
       handleOk();
     } catch (error) {
-      console.log(error);
       Modal.error({
         title: 'Erro',
         content: `Requisição inválida.`,
@@ -156,12 +156,12 @@ export function Games() {
                 onChange={(e) => {
                   setSelectRounds(e);
                 }}
-                placeholder="Selecione o round"
+                placeholder="Selecione a rodada"
               >
                 {rounds?.map((e) => {
                   return (
                     <Option key={e} value={e}>
-                      {e}
+                      {'Rodada ' + e}
                     </Option>
                   );
                 })}

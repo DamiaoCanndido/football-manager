@@ -12,7 +12,7 @@ const { Option } = Select;
 
 export function Teams() {
   const [teams, setTeams] = useState<ITeam[]>([]);
-  const [select, setSelect] = useState('');
+  const [select, setSelect] = useState('all');
   const searchName = useRef<InputRef | null>(null);
 
   const name = useRef<InputRef | null>(null);
