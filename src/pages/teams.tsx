@@ -6,6 +6,7 @@ import { TeamCard } from '@/components/cards/team-card';
 import { Searching } from '@/components/ui/searching';
 import { Button, Form, Input, Modal, Select, InputRef } from 'antd';
 import { ITeam } from '@/interfaces/team';
+import { SearchSelect } from '@/components/ui/search-select';
 
 const { Option } = Select;
 
@@ -67,7 +68,7 @@ export function Teams() {
   };
 
   useEffect(() => {
-    if (select === '') {
+    if (select === 'all') {
       api.get(`/team`).then((response) => {
         setTeams(response.data);
       });
@@ -85,6 +86,13 @@ export function Teams() {
     });
   }
 
+  const selectOptions = [
+    { all: 'Todos' },
+    { club: 'Clube' },
+    { selection: 'Seleção' },
+    { amateur: 'Amador' },
+  ];
+
   return (
     <div className="flex">
       <Navbar />
@@ -92,19 +100,7 @@ export function Teams() {
         <Menu />
         <main className="px-4 w-full pt-4 mt-24 ml-60">
           <div className="flex justify-between p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
-            <Select
-              className="w-40"
-              id="type"
-              onChange={(e) => {
-                setSelect(e);
-              }}
-              allowClear
-            >
-              <Option value="">Todos</Option>
-              <Option value="club">Clube</Option>
-              <Option value="selection">Seleção</Option>
-              <Option value="amateur">Amador</Option>
-            </Select>
+            <SearchSelect options={selectOptions} setSelect={setSelect} />
             <Searching getSearch={getSearch} searchName={searchName} />
             <>
               <Button className="bg-green-400 text-white" onClick={showModal}>
