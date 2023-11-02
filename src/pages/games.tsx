@@ -103,13 +103,11 @@ export function Games() {
     } else {
       let round = '';
       if (selectRounds) {
-        round = selectRounds;
+        round = '?round=' + selectRounds;
       }
-      api
-        .get(`/fixtures/${selectLeagues}/league?round=${round}`)
-        .then((response) => {
-          setGames(response.data);
-        });
+      api.get(`/fixtures/${selectLeagues}/league${round}`).then((response) => {
+        setGames(response.data);
+      });
 
       const element = leagues.find((e) => {
         return e.id === selectLeagues;
