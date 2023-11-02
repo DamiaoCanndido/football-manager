@@ -63,6 +63,13 @@ export function Games() {
     setHour(undefined);
   };
 
+  const resetScoreFields = () => {
+    homeScore.current?.defaultValue;
+    awayScore.current?.defaultValue;
+    homePenalty.current?.defaultValue;
+    awayPenalty.current?.defaultValue;
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -87,7 +94,6 @@ export function Games() {
   }, [games]);
 
   useEffect(() => {
-    console.log(selectRounds);
     if (selectLeagues === '') {
       api.get(`/fixtures`).then((response) => {
         setGames(response.data);
@@ -139,6 +145,32 @@ export function Games() {
       });
     } finally {
       handleOk();
+    }
+  };
+
+  const handleScoreSubmit = async () => {
+    try {
+      await api.put(`/fixtures/${game!.id}`, {
+        homeScore: parseInt(homeScore.current!.value),
+        awayScore: parseInt(awayScore.current!.value),
+        homePenalty: parseInt(homePenalty.current!.value),
+        awayPenalty: parseInt(awayPenalty.current!.value),
+      });
+      api.get(`/fixtures`).then((response) => {
+        setGames(response.data);
+      });
+      Modal.success({
+        title: 'Atualizado',
+        content: `Placar atualizado.`,
+      });
+      handleScoreOk();
+    } catch (error) {
+      Modal.error({
+        title: 'Erro',
+        content: `Requisição inválida.`,
+      });
+    } finally {
+      handleScoreOk();
     }
   };
 
@@ -452,7 +484,7 @@ export function Games() {
                   <div className="flex gap-2">
                     <Form.Item name="button">
                       <Button
-                        onClick={() => {}}
+                        onClick={handleScoreSubmit}
                         className="bg-green-400"
                         type="primary"
                         htmlType="submit"
@@ -462,7 +494,7 @@ export function Games() {
                     </Form.Item>
                     <Form.Item name="button">
                       <Button
-                        onClick={() => {}}
+                        onClick={resetScoreFields}
                         className="bg-orange-400"
                         type="primary"
                         htmlType="reset"
