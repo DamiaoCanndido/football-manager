@@ -1,7 +1,7 @@
 import { Navbar } from '@/components/main/navbar';
 import { Menu } from '@/components/main/menu';
 import { GameCard } from '@/components/cards/game-card';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IGame } from '@/interfaces/game';
 import { api } from '@/lib/axios';
 import { Dayjs } from 'dayjs';
@@ -21,6 +21,7 @@ const { Option } = Select;
 
 export function Games() {
   const [games, setGames] = useState<IGame[]>([]);
+  const [game, setGame] = useState<IGame | undefined>(undefined);
   const [teams, setTeams] = useState<ITeam[]>([]);
   const [leagues, setLeagues] = useState<ILeague[]>([]);
   const [selectLeagues, setSelectLeagues] = useState('');
@@ -33,6 +34,25 @@ export function Games() {
   const [createRound, setCreateRound] = useState(1);
   const [date, setDate] = useState<Dayjs | undefined>();
   const [hour, setHour] = useState<Dayjs | undefined>();
+
+  const homeScore = useRef<HTMLInputElement | null>(null);
+  const awayScore = useRef<HTMLInputElement | null>(null);
+  const homePenalty = useRef<HTMLInputElement | null>(null);
+  const awayPenalty = useRef<HTMLInputElement | null>(null);
+
+  const [isScoreModalOpen, setIsScoreModalOpen] = useState(false);
+
+  const showScoreModal = () => {
+    setIsScoreModalOpen(true);
+  };
+
+  const handleScoreOk = () => {
+    setIsScoreModalOpen(false);
+  };
+
+  const handleScoreCancel = () => {
+    setIsScoreModalOpen(false);
+  };
 
   const resetFields = () => {
     setHomeId('');
@@ -348,11 +368,125 @@ export function Games() {
                   </div>
                 </Form>
               </Modal>
+              <Modal
+                title="Definir placar:"
+                centered
+                open={isScoreModalOpen}
+                onOk={handleScoreOk}
+                onCancel={handleScoreCancel}
+                footer
+              >
+                <Form
+                  name="setScore"
+                  style={{ maxWidth: 600 }}
+                  layout="vertical"
+                  autoComplete="off"
+                >
+                  <div className="flex gap-6">
+                    <Form.Item
+                      hasFeedback
+                      label={game?.home.code}
+                      name="homeScore"
+                      validateFirst
+                      required
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Digite um placar válido.',
+                        },
+                      ]}
+                    >
+                      <InputNumber
+                        placeholder="Placar"
+                        min={0}
+                        ref={homeScore}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      hasFeedback
+                      label="pênaltis"
+                      name="homePenalty"
+                      validateFirst
+                    >
+                      <InputNumber
+                        placeholder="Placar"
+                        min={0}
+                        ref={homePenalty}
+                      />
+                    </Form.Item>
+                  </div>
+                  <div className="flex gap-6">
+                    <Form.Item
+                      hasFeedback
+                      label={game?.away.code}
+                      name="awayScore"
+                      validateFirst
+                      required
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Digite um placar válido.',
+                        },
+                      ]}
+                    >
+                      <InputNumber
+                        placeholder="Placar"
+                        min={0}
+                        ref={awayScore}
+                      />
+                    </Form.Item>
+                    <Form.Item
+                      hasFeedback
+                      label="pênaltis"
+                      name="awayPenalty"
+                      validateFirst
+                    >
+                      <InputNumber
+                        placeholder="Placar"
+                        min={0}
+                        ref={awayPenalty}
+                      />
+                    </Form.Item>
+                  </div>
+
+                  <div className="flex gap-2">
+                    <Form.Item name="button">
+                      <Button
+                        onClick={() => {}}
+                        className="bg-green-400"
+                        type="primary"
+                        htmlType="submit"
+                      >
+                        Definir
+                      </Button>
+                    </Form.Item>
+                    <Form.Item name="button">
+                      <Button
+                        onClick={() => {}}
+                        className="bg-orange-400"
+                        type="primary"
+                        htmlType="reset"
+                      >
+                        Apagar
+                      </Button>
+                    </Form.Item>
+                  </div>
+                </Form>
+              </Modal>
             </>
           </div>
           <div className="flex flex-col items-center">
             {games.map((e) => {
-              return <GameCard key={e.id} items={e} />;
+              return (
+                <GameCard
+                  key={e.id}
+                  items={e}
+                  showScoreModal={showScoreModal}
+                  getGame={() => {
+                    setGame(e);
+                  }}
+                />
+              );
             })}
           </div>
         </main>

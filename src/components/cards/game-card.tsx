@@ -1,7 +1,7 @@
 import { DateFormatter } from '@/helpers/date-formatter';
 import { ITeam } from '@/interfaces/team';
 
-interface IGame {
+interface IGameProps {
   items: {
     id: string;
     fullTime: boolean;
@@ -20,11 +20,19 @@ interface IGame {
       name: string;
     } | null;
   };
+  showScoreModal: () => void;
+  getGame: () => void;
 }
 
-export function GameCard({ items }: IGame) {
+export function GameCard({ items, showScoreModal, getGame }: IGameProps) {
   return (
-    <div className="flex flex-col h-40 w-96 mx-2 mb-2 border rounded-xl border-black">
+    <div
+      onClick={() => {
+        getGame();
+        showScoreModal();
+      }}
+      className="flex flex-col h-40 w-96 mx-2 mb-2 border rounded-xl border-black hover:bg-gray-200 cursor-pointer"
+    >
       <div className="flex flex-1 items-center justify-center">
         {items.league
           ? `${items.league.name} • Rodada ${items.round}`
