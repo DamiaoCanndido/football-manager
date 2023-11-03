@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/main/navbar';
-import { Menu } from '@/components/main/menu';
+import { SideBar } from '@/components/main/sidebar';
 import { LeagueCard } from '@/components/cards/league-card';
 import { useEffect, useRef, useState } from 'react';
 import { api } from '@/lib/axios';
@@ -15,6 +15,7 @@ import {
   Modal,
   Select,
 } from 'antd';
+import { CreateButton } from '@/components/ui/create-button';
 
 const { Option } = Select;
 
@@ -111,8 +112,8 @@ export function Leagues() {
     <div className="flex">
       <Navbar />
       <>
-        <Menu />
-        <main className="px-4 w-full pt-4 mt-24 ml-60">
+        <SideBar />
+        <main className="px-4 w-full pt-4 mt-24 ml-44">
           <div className="flex justify-between p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
             <Select
               className="w-40"
@@ -139,9 +140,7 @@ export function Leagues() {
             </Select>
             <Searching getSearch={getSearch} searchName={searchName} />
             <>
-              <Button className="bg-green-400 text-white" onClick={showModal}>
-                Criar
-              </Button>
+              <CreateButton showModal={showModal} />
               <Modal
                 title="Criar nova liga:"
                 centered

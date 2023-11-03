@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
 import { api } from '../lib/axios';
 import { Navbar } from '@/components/main/navbar';
-import { Menu } from '@/components/main/menu';
+import { SideBar } from '@/components/main/sidebar';
 import { TeamCard } from '@/components/cards/team-card';
 import { Searching } from '@/components/ui/searching';
 import { Button, Form, Input, Modal, Select, InputRef } from 'antd';
 import { ITeam } from '@/interfaces/team';
 import { SearchSelect } from '@/components/ui/search-select';
+import { CreateButton } from '@/components/ui/create-button';
 
 const { Option } = Select;
 
@@ -97,15 +98,13 @@ export function Teams() {
     <div className="flex">
       <Navbar />
       <>
-        <Menu />
-        <main className="px-4 w-full pt-4 mt-24 ml-60">
+        <SideBar />
+        <main className="px-4 w-full pt-4 mt-24 ml-44">
           <div className="flex justify-between p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
             <SearchSelect options={selectOptions} setSelect={setSelect} />
             <Searching getSearch={getSearch} searchName={searchName} />
             <>
-              <Button className="bg-green-400 text-white" onClick={showModal}>
-                Criar
-              </Button>
+              <CreateButton showModal={showModal} />
               <Modal
                 title="Criar novo time:"
                 centered

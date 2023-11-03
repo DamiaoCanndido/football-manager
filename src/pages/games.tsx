@@ -1,5 +1,5 @@
 import { Navbar } from '@/components/main/navbar';
-import { Menu } from '@/components/main/menu';
+import { SideBar } from '@/components/main/sidebar';
 import { GameCard } from '@/components/cards/game-card';
 import { useEffect, useRef, useState } from 'react';
 import { IGame } from '@/interfaces/game';
@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import { ILeague } from '@/interfaces/league';
 import { ITeam } from '@/interfaces/team';
+import { CreateButton } from '@/components/ui/create-button';
 
 const { Option } = Select;
 
@@ -176,8 +177,8 @@ export function Games() {
     <div className="flex bg-white">
       <Navbar />
       <>
-        <Menu />
-        <main className="px-4 w-full pt-4 mt-24 ml-60">
+        <SideBar />
+        <main className="px-4 w-full pt-4 mt-24 ml-44">
           <div className="flex justify-between p-4 items-center h-20 bg-gray-400 mb-4 rounded-xl">
             <div>
               <Select
@@ -218,9 +219,7 @@ export function Games() {
               </Select>
             </div>
             <>
-              <Button className="bg-green-400 text-white" onClick={showModal}>
-                Criar
-              </Button>
+              <CreateButton showModal={showModal} />
               <Modal
                 title="Criar novo jogo:"
                 centered
